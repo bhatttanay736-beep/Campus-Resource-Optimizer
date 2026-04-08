@@ -18,8 +18,13 @@
                 <h2>CROptimizer</h2>
             </div>
             <ul class="nav-links">
-                <li class="active"><a href="#" id="nav-dashboard">Dashboard</a></li>
+                <li class="active"><a href="#" id="nav-dashboard">Room Booking</a></li>
+                <li><a href="#" id="nav-seats">Seat Booking</a></li>
+                <li><a href="#" id="nav-books">Library Catalog</a></li>
+                <li><a href="#" id="nav-history">My Bookings</a></li>
                 <li><a href="#" id="nav-insights">Advanced AI Insights</a></li>
+                <li class="admin-only" style="display: none;"><a href="#" id="nav-optimizer">Book Inventory</a></li>
+                <li class="admin-only" style="display: none;"><a href="#" id="nav-requests">Admin Requests</a></li>
             </ul>
         </nav>
 
@@ -30,9 +35,10 @@
                     <h1 class="page-title">Campus Resource Optimizer</h1>
                     <p class="subtitle">Multi-Model Smart Infrastructure Predictions</p>
                 </div>
-                <div class="user-profile">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix2" alt="User Avatar">
-                    <span>Admin Profile</span>
+                <div class="user-profile" id="user-profile">
+                    <span id="user-profile-text">Guest Mode</span>
+                    <button class="btn-primary" id="student-login-btn">Student Login</button>
+                    <button class="btn-primary btn-secondary" id="admin-profile-btn">Admin Access</button>
                 </div>
             </header>
 
@@ -55,7 +61,7 @@
 
                 <div class="resources-section">
                     <div class="section-header">
-                        <h2>Available Resources</h2>
+                        <h2>Available Rooms & Equipment</h2>
                         <button class="btn-primary" onclick="loadResources()">Refresh</button>
                     </div>
                     <div class="resources-grid" id="resources-container">
@@ -64,8 +70,40 @@
                 </div>
             </section>
 
+            <!-- Seat Booking View -->
+            <section id="seats-view" class="view">
+                <div class="section-header">
+                    <h2>Library Study Seats</h2>
+                    <button class="btn-primary" onclick="loadSeats()">Refresh Seats</button>
+                </div>
+                <div class="resources-grid" id="seats-container">
+                    <div class="loading-state">Loading library seats...</div>
+                </div>
+            </section>
+
+            <!-- Library Catalog View -->
+            <section id="books-view" class="view">
+                <div class="section-header">
+                    <h2>Physical Library Inventory</h2>
+                    <button class="btn-primary" onclick="loadBooks()">Refresh Inventory</button>
+                </div>
+                <div class="resources-grid" id="books-container">
+                    <div class="loading-state">Loading library catalog...</div>
+                </div>
+            </section>
+
+            <!-- My Bookings History View -->
+            <section id="history-view" class="view">
+                <div class="section-header">
+                    <h2>My Booking & Reservation History</h2>
+                </div>
+                <div class="requests-grid" id="history-container">
+                    <div class="loading-state">Please login as a student to view your booking history.</div>
+                </div>
+            </section>
+
             <!-- AI Insights View -->
-            <section id="insights-view" class="view" style="display: none;">
+            <section id="insights-view" class="view">
                 <div class="section-header">
                     <h2>Live Model Forecasting</h2>
                 </div>
@@ -168,6 +206,28 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Admin Requests View -->
+            <section id="requests-view" class="view">
+                <div class="section-header">
+                    <h2>Pending Booking Requests</h2>
+                    <button class="btn-primary" onclick="loadRequests()">Refresh</button>
+                </div>
+                <div class="requests-grid" id="requests-container">
+                    <div class="loading-state">Loading booking requests...</div>
+                </div>
+            </section>
+
+            <!-- Optimizer AI View -->
+            <section id="optimizer-view" class="view">
+                <div class="section-header">
+                    <h2>Book Inventory Optimization</h2>
+                    <button class="btn-primary" onclick="loadOptimization()">Run AI Analysis</button>
+                </div>
+                <div class="resources-grid" id="optimizer-container">
+                    <div class="loading-state">Click 'Run AI Analysis' to fetch dynamic checkout predictions.</div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -180,10 +240,6 @@
             
             <form id="booking-form">
                 <input type="hidden" id="book-resource-id">
-                <div class="form-group">
-                    <label>Your Name</label>
-                    <input type="text" id="book-name" required placeholder="John Doe">
-                </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Start Time</label>
@@ -195,6 +251,90 @@
                     </div>
                 </div>
                 <button type="submit" class="btn-primary full-width">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Seat Booking Modal -->
+    <div class="modal-overlay" id="seat-booking-modal">
+        <div class="modal-content glass-panel">
+            <button class="close-btn" id="close-seat-modal">&times;</button>
+            <h2>Book Study Seat</h2>
+            <p id="modal-seat-name" class="modal-subtitle">Seat Name</p>
+            
+            <form id="seat-booking-form">
+                <input type="hidden" id="book-seat-id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" id="seat-start" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" id="seat-end" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary full-width">Confirm Seat Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Book Reservation Modal -->
+    <div class="modal-overlay" id="book-reserve-modal">
+        <div class="modal-content glass-panel">
+            <button class="close-btn" id="close-book-modal">&times;</button>
+            <h2>Reserve Library Book</h2>
+            <p id="modal-book-title" class="modal-subtitle">Book Title</p>
+            
+            <form id="book-reserve-form">
+                <input type="hidden" id="reserve-book-id">
+                <div class="form-group">
+                    <label>Pickup Date</label>
+                    <input type="date" id="reserve-date" required>
+                </div>
+                <button type="submit" class="btn-primary full-width">Confirm Reservation</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-content glass-panel">
+            <button class="close-btn" id="close-login-modal">&times;</button>
+            <h2>Admin Login</h2>
+            <p class="modal-subtitle">Enter credentials to unlock admin features</p>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Admin Username</label>
+                    <input type="text" id="login-user" required placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label>Admin Password</label>
+                    <input type="password" id="login-pass" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary full-width">Login as Admin</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student Login Modal -->
+    <div class="modal-overlay" id="student-login-modal">
+        <div class="modal-content glass-panel">
+            <button class="close-btn" id="close-student-login-modal">&times;</button>
+            <h2>Student Login</h2>
+            <p class="modal-subtitle">Login to access booking & history (Pass: student123)</p>
+            
+            <form id="student-login-form">
+                <div class="form-group">
+                    <label>Student Name</label>
+                    <input type="text" id="student-user" required placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="student-pass" required placeholder="student123">
+                </div>
+                <button type="submit" class="btn-primary full-width">Login</button>
             </form>
         </div>
     </div>

@@ -117,18 +117,34 @@ header {
 .user-profile {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     background: var(--card-bg);
-    padding: 8px 16px;
+    padding: 6px 12px 6px 20px;
     border-radius: 50px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+#user-profile-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.user-profile .btn-primary {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 20px;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
     border: 1px solid var(--glass-border);
 }
 
-.user-profile img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #fff;
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* Views toggling */
