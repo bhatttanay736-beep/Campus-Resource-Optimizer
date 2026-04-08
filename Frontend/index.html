@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Multi-Model AI Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">✨</span>
+                <h2>CROptimizer</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active"><a href="#" id="nav-dashboard">Dashboard</a></li>
+                <li><a href="#" id="nav-insights">Advanced AI Insights</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content area -->
+        <main class="main-content">
+            <header>
+                <div>
+                    <h1 class="page-title">Campus Resource Optimizer</h1>
+                    <p class="subtitle">Multi-Model Smart Infrastructure Predictions</p>
+                </div>
+                <div class="user-profile">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix2" alt="User Avatar">
+                    <span>Admin Profile</span>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="view active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Resources</h3>
+                        <p id="stat-total">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Available Now</h3>
+                        <p id="stat-available">0</p>
+                    </div>
+                    <div class="stat-card highlight-card">
+                        <h3>Optimization Score</h3>
+                        <p>94%</p>
+                    </div>
+                </div>
+
+                <div class="resources-section">
+                    <div class="section-header">
+                        <h2>Available Resources</h2>
+                        <button class="btn-primary" onclick="loadResources()">Refresh</button>
+                    </div>
+                    <div class="resources-grid" id="resources-container">
+                        <div class="loading-state">Loading resources...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Insights View -->
+            <section id="insights-view" class="view" style="display: none;">
+                <div class="section-header">
+                    <h2>Live Model Forecasting</h2>
+                </div>
+                <div class="ai-models-grid">
+                    <!-- Model A: Room Occupancy Sensors -->
+                    <div class="insight-card">
+                        <div class="model-header">
+                            <span class="icon">🌡️</span>
+                            <h3>Room Sensoring</h3>
+                        </div>
+                        <p class="model-desc">Predicts occupant count via IoT sensory data.</p>
+                        <div class="sliders">
+                            <div class="slider-group">
+                                <label>Temperature (°C): <span id="val-temp">24.0</span></label>
+                                <input type="range" class="glass-slider" id="slip-temp" min="15" max="35" step="0.1" value="24.0">
+                            </div>
+                            <div class="slider-group">
+                                <label>Light (Lux): <span id="val-light">150</span></label>
+                                <input type="range" class="glass-slider" id="slip-light" min="0" max="600" value="150">
+                            </div>
+                            <div class="slider-group">
+                                <label>Sound (dB): <span id="val-sound">1.5</span></label>
+                                <input type="range" class="glass-slider" id="slip-sound" min="0" max="5" step="0.1" value="1.5">
+                            </div>
+                            <div class="slider-group">
+                                <label>CO2 (ppm): <span id="val-co2">400</span></label>
+                                <input type="range" class="glass-slider" id="slip-co2" min="300" max="1500" value="400">
+                            </div>
+                        </div>
+                        <div class="prediction-box pt-blue">
+                            <h4>Predicted Occupants:</h4>
+                            <div class="result-number" id="res-room">--</div>
+                        </div>
+                    </div>
+
+                    <!-- Model B: Seat Availability -->
+                    <div class="insight-card">
+                        <div class="model-header">
+                            <span class="icon">🪑</span>
+                            <h3>Library Seat Usage</h3>
+                        </div>
+                        <p class="model-desc">Predicts probability a specific seat gets occupied.</p>
+                        <div class="sliders">
+                            <div class="slider-group">
+                                <label>Hour of Day: <span id="val-hour">12</span>:00</label>
+                                <input type="range" class="glass-slider pt-orange" id="slip-hour" min="0" max="23" value="12">
+                            </div>
+                            <div class="slider-group">
+                                <label>Day of Week:</label>
+                                <select id="slip-day" class="glass-select">
+                                    <option value="Monday">Monday</option>
+                                    <option value="Tuesday">Tuesday</option>
+                                    <option value="Wednesday">Wednesday</option>
+                                    <option value="Thursday">Thursday</option>
+                                    <option value="Friday">Friday</option>
+                                    <option value="Saturday">Saturday</option>
+                                    <option value="Sunday">Sunday</option>
+                                </select>
+                            </div>
+                            <div class="slider-group">
+                                <label>Noise Level (dB): <span id="val-noise">45</span></label>
+                                <input type="range" class="glass-slider pt-orange" id="slip-noise" min="20" max="80" value="45">
+                            </div>
+                        </div>
+                        <div class="prediction-box pt-orange">
+                            <h4>Occupied Probability:</h4>
+                            <div class="result-number" id="res-seat">--%</div>
+                        </div>
+                    </div>
+
+                    <!-- Model C: Smart Library User -->
+                    <div class="insight-card">
+                        <div class="model-header">
+                            <span class="icon">📱</span>
+                            <h3>Student Satisfaction</h3>
+                        </div>
+                        <p class="model-desc">Predicts satisfaction score (1-5) via digital footprint.</p>
+                        <div class="sliders">
+                            <div class="slider-group">
+                                <label>Visit Duration (min): <span id="val-duration">60</span></label>
+                                <input type="range" class="glass-slider pt-green" id="slip-duration" min="0" max="240" step="5" value="60">
+                            </div>
+                            <div class="slider-group">
+                                <label>Books Borrowed: <span id="val-books">2</span></label>
+                                <input type="range" class="glass-slider pt-green" id="slip-books" min="0" max="10" value="2">
+                            </div>
+                            <div class="slider-group">
+                                <label>Digital Usage Ratio: <span id="val-digital">0.5</span></label>
+                                <input type="range" class="glass-slider pt-green" id="slip-digital" min="0" max="1" step="0.1" value="0.5">
+                            </div>
+                            <div class="slider-group">
+                                <label>App Logins: <span id="val-logins">4</span></label>
+                                <input type="range" class="glass-slider pt-green" id="slip-logins" min="0" max="20" value="4">
+                            </div>
+                        </div>
+                        <div class="prediction-box pt-green">
+                            <h4>Satisfaction Score:</h4>
+                            <div class="result-number" id="res-user">-- / 5</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal-overlay" id="booking-modal">
+        <div class="modal-content glass-panel">
+            <button class="close-btn" id="close-modal">&times;</button>
+            <h2>Book Resource</h2>
+            <p id="modal-resource-name" class="modal-subtitle">Resource Name</p>
+            
+            <form id="booking-form">
+                <input type="hidden" id="book-resource-id">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="book-name" required placeholder="John Doe">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" id="book-start" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" id="book-end" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary full-width">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
