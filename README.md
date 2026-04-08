@@ -40,18 +40,31 @@
 
 ### 1. Prerequisites
 - **Python 3.8+**
+- **Node.js & npm** (Required for frontend serving/tooling)
 - (Optional but recommended) Download the [Goodreads books dataset](https://www.kaggle.com/datasets/jealousleopard/goodreadsbooks) from Kaggle, rename it to `books_dataset.csv`, and place it in the `backend/` folder to populate the library with realistic data.
 
-### 2. Installation
+### 2. Installation & Setup
+
+**Backend Setup:**
 Open a terminal in the project directory:
 ```powershell
 pip install -r backend/requirements.txt
 ```
 
+**Frontend Tooling (Optional):**
+If you wish to use a local development server for the frontend separate from FastAPI:
+```powershell
+# Install Node.js from https://nodejs.org/
+# Then you can run:
+npm install -g serve
+serve frontend
+```
+
 ### 3. Run the Application
+Start the unified Python server:
 ```powershell
 cd backend
-python -m uvicorn main:app --reload
+python main.py
 ```
 Navigate to `http://127.0.0.1:8000/` in your browser.
 
